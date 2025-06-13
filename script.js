@@ -1,42 +1,45 @@
 document.getElementById("jkhForm").addEventListener("submit", async function (e) {
   e.preventDefault();
 
-  const userText = document.getElementById("userInput").value.trim();
-  const commentsText = document.getElementById("comments").value.trim();
+  const userInput = document.getElementById("userInput").value.trim();
+  const comments = document.getElementById("comments").value.trim();
   const output = document.getElementById("output");
   const loading = document.getElementById("loading");
-  output.innerHTML = "";
+
+  output.innerText = "";
   loading.style.display = "block";
 
-  const prompt = `Сгенерируй официальный, вежливый и структурированный ответ от управляющей компании жильцу, на основе следующего текста обращения:
+  const prompt = `
+На основе обращения жильца и комментариев сгенерируй официальный, деловой и вежливый ответ в письменной форме.
 
-Обращение от жильца:
-${userText}
+Обращение:
+${userInput}
 
-Что нужно учесть:
-${commentsText}
-
-Ответ должен быть деловым, с уважительным тоном, можно использовать шаблон деловой переписки.`;
+Замечания и особенности, которые нужно учесть:
+${comments}
+`;
 
   try {
-    const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+    const response = await fetch("https://answer2.vercel.app/api/openrouter", {
       method: "POST",
       headers: {
-        "Authorization": "Bearer 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", // ЗАМЕНИ НА СВОЙ
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        model: "deepseek-chat",
-        messages: [{ role: "user", content: prompt }]
+        model: "deepseek/deepseek-r1-0528:free",
+        messages: [
+          { role: "user", content: prompt }
+        ]
       })
     });
 
-    const data = await res.json();
-    const answer = data.choices?.[0]?.message?.content;
-    output.innerText = answer || "⚠️ Не удалось сгенерировать ответ.";
+    const data = await response.json();
+    output.innerText =
+      data.choices?.[0]?.message?.content || "⚠️ Ответ не удалось получить.";
+
   } catch (error) {
-    console.error(error);
-    output.innerText = "❌ Произошла ошибка. Проверьте подключение или ключ API.";
+    console.error("Ошибка:", error);
+    output.innerText = "❌ Ошибка при генерации. Попробуйте позже.";
   } finally {
     loading.style.display = "none";
   }
