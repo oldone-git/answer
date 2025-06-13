@@ -22,7 +22,7 @@ ${commentsText}
     const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
       method: "POST",
       headers: {
-        "Authorization": "Bearer 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", // ЗАМЕНИ НА СВОЙ
+        "Authorization": "Bearer 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", // ЗАМЕНИ НА СВОЙ
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
