@@ -1,13 +1,19 @@
 export default async function handler(req, res) {
-  try {
-    if (req.method !== 'POST') {
-      return res.status(405).json({ error: 'Method Not Allowed' });
-    }
+  // CORS-заголовки
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
+  // Обработка предварительного запроса (preflight)
+  if (req.method === "OPTIONS") {
+    return res.status(200).end();
+  }
+
+  try {
     const { model, messages } = req.body;
 
     if (!process.env.OPENROUTER_API_KEY) {
-      return res.status(500).json({ error: 'Missing API key' });
+      return res.status(500).json({ error: "Missing API key" });
     }
 
     const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
@@ -16,10 +22,7 @@ export default async function handler(req, res) {
         "Authorization": `Bearer ${process.env.OPENROUTER_API_KEY}`,
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({
-        model,
-        messages
-      })
+      body: JSON.stringify({ model, messages })
     });
 
     const data = await response.json();
@@ -30,7 +33,7 @@ export default async function handler(req, res) {
 
     res.status(200).json(data);
   } catch (error) {
-    console.error('Server error:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    console.error("Ошибка сервера:", error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 }
