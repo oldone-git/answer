@@ -1,68 +1,362 @@
+* {
+  box-sizing: border-box;
+}
+
 body {
-  font-family: Arial, sans-serif;
-  background-color: #f5f7fa;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   margin: 0;
   padding: 0;
+  min-height: 100vh;
+  color: #333;
+}
+
+.main-layout {
+  display: flex;
+  min-height: 100vh;
+  max-width: 1400px;
+  margin: 0 auto;
+  gap: 20px;
+  padding: 20px;
 }
 
 .container {
-  max-width: 680px;
-  margin: 50px auto;
-  padding: 30px;
-  background-color: white;
-  border-radius: 8px;
-  box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
+  flex: 1;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 40px;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 40px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid #e3f2fd;
 }
 
 h1 {
-  text-align: center;
-  margin-bottom: 30px;
+  color: #1565c0;
+  font-size: 2.2em;
+  margin-bottom: 10px;
+  font-weight: 600;
+  text-shadow: 0 2px 4px rgba(21, 101, 192, 0.1);
+}
+
+.subtitle {
+  color: #546e7a;
+  font-size: 1.1em;
+  margin: 0;
+  font-weight: 400;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 label {
-  display: block;
-  margin-top: 15px;
-  margin-bottom: 5px;
-  font-weight: bold;
+  font-weight: 600;
+  color: #1565c0;
+  font-size: 1.1em;
+  margin: 0;
 }
 
 textarea {
   width: 100%;
-  padding: 10px;
-  font-size: 14px;
+  padding: 16px;
+  font-size: 15px;
+  border: 2px solid #e3f2fd;
+  border-radius: 12px;
   resize: vertical;
-  min-height: 80px;
+  min-height: 120px;
+  font-family: inherit;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  background: #fafafa;
 }
 
-button {
-  margin-top: 20px;
-  padding: 12px 20px;
+textarea:focus {
+  outline: none;
+  border-color: #2196f3;
+  box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
+  background: white;
+}
+
+textarea::placeholder {
+  color: #90a4ae;
+  font-style: italic;
+}
+
+.generate-btn {
+  padding: 16px 32px;
   font-size: 16px;
-  background-color: #3298dc;
+  font-weight: 600;
+  background: linear-gradient(45deg, #2196f3, #1976d2);
   color: white;
   border: none;
-  border-radius: 6px;
+  border-radius: 12px;
   cursor: pointer;
+  transition: all 0.3s ease;
+  align-self: center;
+  min-width: 200px;
+  position: relative;
+  overflow: hidden;
 }
 
-button:hover {
-  background-color: #277cc7;
+.generate-btn:hover {
+  background: linear-gradient(45deg, #1976d2, #1565c0);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(33, 150, 243, 0.3);
+}
+
+.generate-btn:active {
+  transform: translateY(0);
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 30px;
+  background: linear-gradient(45deg, #e3f2fd, #f3e5f5);
+  border-radius: 12px;
+  color: #1565c0;
+  font-weight: 500;
+  font-size: 16px;
+  margin-top: 20px;
+}
+
+.loading-spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #e3f2fd;
+  border-top: 2px solid #2196f3;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 .output {
   margin-top: 30px;
-  padding: 20px;
-  background: #eef6ff;
-  border-left: 4px solid #3298dc;
-  white-space: pre-line;
+  background: linear-gradient(45deg, #e8f5e8, #e3f2fd);
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid #bbdefb;
+  box-shadow: 0 4px 12px rgba(33, 150, 243, 0.1);
 }
 
-.ad-placeholder {
-  margin-top: 40px;
-  padding: 10px;
-  text-align: center;
-  background-color: #efefef;
-  border-radius: 6px;
+.output-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  background: linear-gradient(45deg, #2196f3, #1976d2);
+  color: white;
+  margin: 0;
+}
+
+.output-header h3 {
+  margin: 0;
+  font-size: 1.2em;
+  font-weight: 600;
+}
+
+.copy-btn {
+  padding: 8px 16px;
   font-size: 14px;
-  color: #555;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.copy-btn:hover {
+  background: #0056b3;
+  transform: scale(1.05);
+}
+
+.output-text {
+  padding: 24px;
+  white-space: pre-line;
+  line-height: 1.6;
+  font-size: 15px;
+  color: #263238;
+  background: white;
+}
+
+/* Боковые блоки рекламы */
+.ad-sidebar {
+  width: 200px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.left-ad {
+  order: -1;
+}
+
+.right-ad {
+  order: 1;
+}
+
+.ad-content {
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+  border: 2px dashed #bbdefb;
+  min-height: 250px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.ad-content p {
+  color: #546e7a;
+  font-weight: 500;
+  margin: 0 0 15px 0;
+}
+
+.yandex-ad-placeholder {
+  width: 100%;
+  height: 200px;
+  background: linear-gradient(45deg, #f5f5f5, #e0e0e0);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #999;
+  font-size: 14px;
+  border: 1px solid #ddd;
+}
+
+.yandex-ad-placeholder::before {
+  content: "Место для рекламы Яндекс.Директ";
+  text-align: center;
+}
+
+/* Подвал */
+.footer {
+  background: rgba(255, 255, 255, 0.9);
+  padding: 30px 20px;
+  margin-top: 20px;
+}
+
+.footer-content {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.footer-ad {
+  text-align: center;
+  padding: 20px;
+  border: 2px dashed #bbdefb;
+  border-radius: 12px;
+}
+
+.footer-ad p {
+  color: #546e7a;
+  font-weight: 500;
+  margin: 0 0 15px 0;
+}
+
+.yandex-ad-horizontal {
+  height: 100px;
+  background: linear-gradient(45deg, #f5f5f5, #e0e0e0);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #999;
+  font-size: 14px;
+  border: 1px solid #ddd;
+}
+
+.yandex-ad-horizontal::before {
+  content: "Горизонтальный блок Яндекс.Директ";
+}
+
+/* Адаптивность */
+@media (max-width: 1200px) {
+  .main-layout {
+    flex-direction: column;
+    padding: 15px;
+  }
+  
+  .ad-sidebar {
+    width: 100%;
+    order: 0;
+  }
+  
+  .left-ad {
+    order: 0;
+  }
+  
+  .right-ad {
+    order: 2;
+  }
+  
+  .container {
+    order: 1;
+  }
+  
+  .ad-content {
+    min-height: 120px;
+    flex-direction: row;
+    gap: 20px;
+  }
+  
+  .yandex-ad-placeholder {
+    height: 100px;
+    flex: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 20px;
+    margin: 10px;
+  }
+  
+  h1 {
+    font-size: 1.8em;
+  }
+  
+  .subtitle {
+    font-size: 1em;
+  }
+  
+  textarea {
+    min-height: 100px;
+  }
+  
+  .output-header {
+    flex-direction: column;
+    gap: 10px;
+    text-align: center;
+  }
+  
+  .main-layout {
+    padding: 10px;
+  }
 }
