@@ -46,14 +46,14 @@
         <span>Обработка запроса...</span>
       </div>
  
-      <div id="output" class="output" style="display: none;">
-        <div class="output-header">
+      <div class="output-wrapper">
+        <div class="output-header" id="outputHeader" style="display: none;">
           <h3>Сгенерированный ответ:</h3>
           <button id="copyBtn" class="copy-btn" onclick="copyToClipboard()">
             📋 Копировать
           </button>
         </div>
-        <div id="outputText" class="output-text"></div>
+        <div id="output" class="output-text"></div>
       </div>
     </div>
 
@@ -79,10 +79,11 @@
     </div>
   </footer>
  
-  <script src="script.js"></script>
   <script>
     function copyToClipboard() {
-      const outputText = document.getElementById('outputText').textContent;
+      const outputDiv = document.getElementById('output');
+      const outputText = outputDiv.textContent || outputDiv.innerText;
+      
       navigator.clipboard.writeText(outputText).then(() => {
         const copyBtn = document.getElementById('copyBtn');
         const originalText = copyBtn.innerHTML;
@@ -94,36 +95,49 @@
         }, 2000);
       }).catch(err => {
         console.error('Ошибка копирования: ', err);
+        // Fallback для старых браузеров
+        const textArea = document.createElement('textarea');
+        textArea.value = outputText;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+        
+        const copyBtn = document.getElementById('copyBtn');
+        const originalText = copyBtn.innerHTML;
+        copyBtn.innerHTML = '✅ Скопировано!';
+        copyBtn.style.backgroundColor = '#28a745';
+        setTimeout(() => {
+          copyBtn.innerHTML = originalText;
+          copyBtn.style.backgroundColor = '#007bff';
+        }, 2000);
       });
     }
 
-    // Модификация существующего скрипта для работы с новым дизайном
-    document.addEventListener('DOMContentLoaded', function() {
-      const originalScript = document.querySelector('script[src="script.js"]');
-      if (originalScript) {
-        // Переопределяем функцию показа результата
-        const originalFetch = window.fetch;
-        const outputDiv = document.getElementById('output');
-        const outputTextDiv = document.getElementById('outputText');
-        
-        // Перехватываем успешный ответ для отображения в новом формате
-        const observer = new MutationObserver(function(mutations) {
-          mutations.forEach(function(mutation) {
-            if (mutation.type === 'childList' && outputDiv.textContent.trim() !== '') {
-              outputTextDiv.textContent = outputDiv.textContent;
-              outputDiv.style.display = 'block';
-              outputDiv.innerHTML = '';
-              outputDiv.appendChild(document.querySelector('.output-header'));
-              outputDiv.appendChild(outputTextDiv);
-            }
-          });
-        });
-        
-        if (outputDiv) {
-          observer.observe(outputDiv, { childList: true, subtree: true });
+    // Показываем заголовок когда появляется результат
+    const observer = new MutationObserver(function(mutations) {
+      mutations.forEach(function(mutation) {
+        if (mutation.type === 'childList' || mutation.type === 'characterData') {
+          const outputDiv = document.getElementById('output');
+          const outputHeader = document.getElementById('outputHeader');
+          
+          if (outputDiv && outputDiv.textContent.trim() !== '') {
+            outputHeader.style.display = 'flex';
+          }
         }
-      }
+      });
     });
+    
+    const outputDiv = document.getElementById('output');
+    if (outputDiv) {
+      observer.observe(outputDiv, { 
+        childList: true, 
+        subtree: true, 
+        characterData: true 
+      });
+    }
   </script>
+  
+  <script src="script.js"></script>
 </body>
 </html>
