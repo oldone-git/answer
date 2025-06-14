@@ -7,29 +7,123 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="container">
-    <h1>Генератор ответа на обращение (ЖКХ)</h1>
-    <form id="jkhForm">
-      <label for="userInput">Что написал жилец:</label>
-      <textarea id="userInput" required></textarea>
+  <div class="main-layout">
+    <!-- Левая реклама -->
+    <div class="ad-sidebar left-ad">
+      <div class="ad-content">
+        <p>📢 Реклама</p>
+        <div class="yandex-ad-placeholder">
+          <!-- Яндекс.Директ блок -->
+        </div>
+      </div>
+    </div>
 
-      <label for="comments">Что учесть в ответе:</label>
-      <textarea id="comments" required></textarea>
+    <!-- Основной контент -->
+    <div class="container">
+      <header class="header">
+        <h1>Генератор ответа на обращение (ЖКХ)</h1>
+        <p class="subtitle">Быстрое создание профессиональных ответов с помощью ИИ</p>
+      </header>
 
-      <button type="submit">Сгенерировать ответ</button>
-    </form>
+      <form id="jkhForm" class="form">
+        <div class="input-group">
+          <label for="userInput">Что написал жилец:</label>
+          <textarea id="userInput" required placeholder="Введите текст обращения жильца..."></textarea>
+        </div>
+ 
+        <div class="input-group">
+          <label for="comments">Что учесть в ответе:</label>
+          <textarea id="comments" required placeholder="Укажите важные моменты для ответа..."></textarea>
+        </div>
+ 
+        <button type="submit" class="generate-btn">
+          <span class="btn-text">Сгенерировать ответ</span>
+        </button>
+      </form>
+ 
+      <div id="loading" class="loading" style="display: none;">
+        <div class="loading-spinner"></div>
+        <span>Обработка запроса...</span>
+      </div>
+ 
+      <div id="output" class="output" style="display: none;">
+        <div class="output-header">
+          <h3>Сгенерированный ответ:</h3>
+          <button id="copyBtn" class="copy-btn" onclick="copyToClipboard()">
+            📋 Копировать
+          </button>
+        </div>
+        <div id="outputText" class="output-text"></div>
+      </div>
+    </div>
 
-    <div id="loading" style="display: none;">⏳ Обработка...</div>
-
-    <div id="output" class="output"></div>
-    
-    <!-- Здесь вы можете вставить Яндекс.Директ -->
-    <div class="ad-placeholder">
-      <!-- Здесь место под рекламный блок -->
-      <p>🔸 Реклама от партнёров</p>
+    <!-- Правая реклама -->
+    <div class="ad-sidebar right-ad">
+      <div class="ad-content">
+        <p>📢 Реклама</p>
+        <div class="yandex-ad-placeholder">
+          <!-- Яндекс.Директ блок -->
+        </div>
+      </div>
     </div>
   </div>
 
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-ad">
+        <p>🔸 Реклама от партнёров</p>
+        <div class="yandex-ad-horizontal">
+          <!-- Горизонтальный Яндекс.Директ блок -->
+        </div>
+      </div>
+    </div>
+  </footer>
+ 
   <script src="script.js"></script>
+  <script>
+    function copyToClipboard() {
+      const outputText = document.getElementById('outputText').textContent;
+      navigator.clipboard.writeText(outputText).then(() => {
+        const copyBtn = document.getElementById('copyBtn');
+        const originalText = copyBtn.innerHTML;
+        copyBtn.innerHTML = '✅ Скопировано!';
+        copyBtn.style.backgroundColor = '#28a745';
+        setTimeout(() => {
+          copyBtn.innerHTML = originalText;
+          copyBtn.style.backgroundColor = '#007bff';
+        }, 2000);
+      }).catch(err => {
+        console.error('Ошибка копирования: ', err);
+      });
+    }
+
+    // Модификация существующего скрипта для работы с новым дизайном
+    document.addEventListener('DOMContentLoaded', function() {
+      const originalScript = document.querySelector('script[src="script.js"]');
+      if (originalScript) {
+        // Переопределяем функцию показа результата
+        const originalFetch = window.fetch;
+        const outputDiv = document.getElementById('output');
+        const outputTextDiv = document.getElementById('outputText');
+        
+        // Перехватываем успешный ответ для отображения в новом формате
+        const observer = new MutationObserver(function(mutations) {
+          mutations.forEach(function(mutation) {
+            if (mutation.type === 'childList' && outputDiv.textContent.trim() !== '') {
+              outputTextDiv.textContent = outputDiv.textContent;
+              outputDiv.style.display = 'block';
+              outputDiv.innerHTML = '';
+              outputDiv.appendChild(document.querySelector('.output-header'));
+              outputDiv.appendChild(outputTextDiv);
+            }
+          });
+        });
+        
+        if (outputDiv) {
+          observer.observe(outputDiv, { childList: true, subtree: true });
+        }
+      }
+    });
+  </script>
 </body>
 </html>
