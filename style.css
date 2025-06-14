@@ -151,13 +151,25 @@ textarea::placeholder {
   100% { transform: rotate(360deg); }
 }
 
-.output {
+.output-wrapper {
   margin-top: 30px;
+}
+
+.output {
   background: linear-gradient(45deg, #e8f5e8, #e3f2fd);
-  border-radius: 16px;
+  border-radius: 0 0 16px 16px;
   overflow: hidden;
   border: 1px solid #bbdefb;
   box-shadow: 0 4px 12px rgba(33, 150, 243, 0.1);
+  padding: 24px;
+  white-space: pre-line;
+  line-height: 1.6;
+  font-size: 15px;
+  color: #263238;
+  background: white;
+  margin-top: 0;
+  border-top: none;
+  border-radius: 0 0 16px 16px;
 }
 
 .output-header {
